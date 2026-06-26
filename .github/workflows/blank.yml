@@ -2,7 +2,7 @@ name: .NET Build and Test
 
 on:
   push:
-    branches: [ "main", "task03" ]
+    branches: [ "main", "task01", "task02" ]
   pull_request:
     branches: [ "main" ]
 
