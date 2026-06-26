@@ -1712,6 +1712,16 @@
         "build": {
           "build/netcoreapp3.1/xunit.runner.visualstudio.props": {}
         }
+      },
+      "task02/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/task02.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/task02.dll": {}
+        }
       }
     }
   },
@@ -5507,12 +5517,18 @@
         "xunit.runner.visualstudio.2.4.5.nupkg.sha512",
         "xunit.runner.visualstudio.nuspec"
       ]
+    },
+    "task02/1.0.0": {
+      "type": "project",
+      "path": "../task02/task02.csproj",
+      "msbuildProject": "../task02/task02.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "Microsoft.NET.Test.Sdk >= 17.6.0",
       "coverlet.collector >= 6.0.0",
+      "task02 >= 1.0.0",
       "xunit >= 2.4.2",
       "xunit.runner.visualstudio >= 2.4.5"
     ]
@@ -5541,7 +5557,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/home/egrot/Documents/GitHub/Practice/task02/task02.csproj": {
+              "projectPath": "/home/egrot/Documents/GitHub/Practice/task02/task02.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
