@@ -6,9 +6,12 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task02", "task02\task02.csproj", "{1B57B890-0D4C-456E-BA65-A88BF4C7BDE3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task02tests", "task02tests\task02tests.csproj", "{CFCEA651-5CF5-4AAA-A673-0A4CE9991DE8}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task01", "task01\task01.csproj", "{16E7CD84-F678-4717-B61C-5C3C8EF36D89}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task01tests", "task01tests\task01tests.csproj", "{02EBF043-4D4E-4AC3-9B6E-24A4CD24C99E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task03", "task03\task03.csproj", "{4DA800BB-7B3A-4FEA-8647-36C711AFBB31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task03tests", "task03tests\task03tests.csproj", "{53306B08-50DD-4AAC-A89E-3DC4CD9B055D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,5 +38,13 @@ Global
 		{02EBF043-4D4E-4AC3-9B6E-24A4CD24C99E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02EBF043-4D4E-4AC3-9B6E-24A4CD24C99E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02EBF043-4D4E-4AC3-9B6E-24A4CD24C99E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DA800BB-7B3A-4FEA-8647-36C711AFBB31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DA800BB-7B3A-4FEA-8647-36C711AFBB31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DA800BB-7B3A-4FEA-8647-36C711AFBB31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DA800BB-7B3A-4FEA-8647-36C711AFBB31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53306B08-50DD-4AAC-A89E-3DC4CD9B055D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53306B08-50DD-4AAC-A89E-3DC4CD9B055D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53306B08-50DD-4AAC-A89E-3DC4CD9B055D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53306B08-50DD-4AAC-A89E-3DC4CD9B055D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
