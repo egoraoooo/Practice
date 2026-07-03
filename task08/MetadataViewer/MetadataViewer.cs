@@ -1,233 +1,131 @@
-﻿namespace MetadataViewer;
-using System;
+﻿using System;
 using System.Reflection;
-using System.Linq;
 
-public class MetadataViewer
+namespace MetadataViewer
 {
-    static void Main(string[] args)
+    public static class MetadataViewer
     {
-        if (args.Length == 0)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Инструкция: MetadataInspector <path-to-assembly>");
-            Console.WriteLine("Пример: MetadataInspector C:\\Projects\\FileSystemCommands.dll");
-            return;
-        }
-
-        string assemblyPath = args[0];
-
-        try
-        {
-            if (!File.Exists(assemblyPath))
+            if (args.Length == 0)
             {
-                Console.WriteLine($"ОШИБКА: ФАЙЛ НЕ НАЙДЕН {assemblyPath}");
+                Console.WriteLine("ОШИБКА: НЕ УКАЗАН ПУТЬ К БИБЛИОТЕКЕ.");
+                Console.WriteLine("Использование: MetadataViewer <путь_к_DLL>");
                 return;
             }
 
-            // Загружаем сборку
-            Assembly assembly = Assembly.LoadFrom(assemblyPath);
-            
-            Console.WriteLine($"Сборка: {assembly.GetName().Name}");
-            Console.WriteLine($"Путь: {assemblyPath}");
+            string assemblyPath = args[0];
+
+            try
+            {
+                Assembly assembly = Assembly.LoadFrom(assemblyPath);
+                PrintAssemblyMetadata(assembly);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ОШИБКА ЗАГРУЗКИ СБОРКИ: {ex.Message}");
+            }
+        }
+
+        public static void PrintAssemblyMetadata(Assembly assembly)
+        {
+            Console.WriteLine($"Сборка: {assembly.FullName}");
 
             Type[] types = assembly.GetTypes();
 
             foreach (Type type in types)
             {
-                // Пропускаем автоматически сгенерированные типы
-                if (type.IsCompilerGenerated())
-                    continue;
+                Console.WriteLine();
+                Console.WriteLine($"Класс: {type.FullName}");
 
-                PrintTypeInfo(type);
-            }
-        }
-        catch (BadImageFormatException)
-        {
-            Console.WriteLine($"ОШИБКА: {assemblyPath} НЕ ЯВЛЯЕТСЯ ДОПУСТИМОЙ СБОРКОЙ");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"ОШИБКА: {ex.Message}");
-        }
-    }
-
-    static void PrintTypeInfo(Type type)
-    {
-        Console.WriteLine();
-        Console.WriteLine($"Классы: {type.FullName}");
-        
-        // Базовый класс
-        if (type.BaseType != null && type.BaseType != typeof(object))
-        {
-            Console.WriteLine($"  Базовый класс: {type.BaseType.Name}");
-        }
-
-        // Атрибуты класса
-        PrintCustomAttributes(type.GetCustomAttributes(false), "  Атрибуты класса:");
-
-        // Конструкторы
-        ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-        if (constructors.Length > 0)
-        {
-            Console.WriteLine("  Конструкторы:");
-            foreach (ConstructorInfo constructor in constructors)
-            {
-                PrintMethodOrConstructorInfo(constructor, "    ");
-            }
-        }
-
-        // Методы
-        MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
-        if (methods.Length > 0)
-        {
-            Console.WriteLine("  Методы:");
-            foreach (MethodInfo method in methods)
-            {
-                if (method.IsSpecialName)
-                    continue;
-
-                PrintMethodOrConstructorInfo(method, "    ");
-            }
-        }
-
-        // Свойства
-        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
-        if (properties.Length > 0)
-        {
-            Console.WriteLine("  Свойства:");
-            foreach (PropertyInfo property in properties)
-            {
-                Console.WriteLine($"    {property.PropertyType.Name} {property.Name}");
-                PrintCustomAttributes(property.GetCustomAttributes(false), "      Атрибуты свойств:");
-            }
-        }
-
-        Console.WriteLine(new string('-', 60));
-    }
-
-    static void PrintMethodOrConstructorInfo(MethodBase methodBase, string indent)
-    {
-        string name = methodBase.IsConstructor ? methodBase.DeclaringType.Name : methodBase.Name;
-        
-        // Модификаторы доступа
-        string accessModifier = GetAccessModifier(methodBase);
-        string staticModifier = methodBase.IsStatic ? "static " : "";
-        
-        // Параметры
-        ParameterInfo[] parameters = methodBase.GetParameters();
-        string paramsStr = string.Join(", ", parameters.Select(p => $"{GetTypeName(p.ParameterType)} {p.Name}"));
-        
-        if (methodBase.IsConstructor)
-        {
-            Console.WriteLine($"{indent}{accessModifier} {staticModifier}{name}({paramsStr})");
-        }
-        else
-        {
-            MethodInfo method = (MethodInfo)methodBase;
-            string returnType = GetTypeName(method.ReturnType);
-            Console.WriteLine($"{indent}{accessModifier} {staticModifier}{returnType} {name}({paramsStr})");
-        }
-
-        // Атрибуты метода/конструктора
-        PrintCustomAttributes(methodBase.GetCustomAttributes(false), $"{indent}  Атрибуты:");
-
-        // Информация о параметрах
-        if (parameters.Length > 0)
-        {
-            Console.WriteLine($"{indent}  Параметры:");
-            foreach (ParameterInfo param in parameters)
-            {
-                Console.WriteLine($"{indent}    - {GetTypeName(param.ParameterType)} {param.Name}" +
-                    (param.IsOptional ? $" = {param.DefaultValue ?? "null"}" : "") +
-                    (param.HasDefaultValue ? $" [default]" : ""));
-            }
-        }
-    }
-
-    static void PrintCustomAttributes(object[] attributes, string header)
-    {
-        if (attributes.Length > 0)
-        {
-            Console.WriteLine($"  {header}");
-            foreach (Attribute attr in attributes)
-            {
-                Console.WriteLine($"    [{attr.GetType().Name}]");
-                
-                // Выводим свойства атрибутов
-                PropertyInfo[] attrProperties = attr.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                foreach (PropertyInfo prop in attrProperties)
+                // Атрибуты класса
+                object[] attributes = type.GetCustomAttributes(false);
+                if (attributes.Length > 0)
                 {
-                    try
+                    Console.WriteLine("  Атрибуты:");
+                    foreach (var attr in attributes)
                     {
-                        object value = prop.GetValue(attr);
-                        if (value != null)
+                        Console.WriteLine($"    - {attr.GetType().Name}");
+                        var properties = attr.GetType().GetProperties();
+                        foreach (var prop in properties)
                         {
-                            Console.WriteLine($"      {prop.Name} = {value}");
+                            var value = prop.GetValue(attr);
+                            Console.WriteLine($"      {prop.Name}: {value}");
                         }
                     }
-                    catch
+                }
+                else
+                {
+                    Console.WriteLine("  Атрибуты: ОТСУТСТВУЮТ");
+                }
+
+                // Конструкторы
+                ConstructorInfo[] constructors = type.GetConstructors();
+                if (constructors.Length > 0)
+                {
+                    Console.WriteLine("  Конструкторы:");
+                    foreach (var ctor in constructors)
                     {
+                        Console.WriteLine($"    - {ctor.Name}");
+                        ParameterInfo[] parameters = ctor.GetParameters();
+                        if (parameters.Length > 0)
+                        {
+                            Console.WriteLine("      Параметры:");
+                            foreach (var param in parameters)
+                            {
+                                Console.WriteLine($"        {param.ParameterType.Name} {param.Name}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("      Параметры: ОТСУТСТВУЮТ");
+                        }
+                    }
+                }
+
+                // Методы
+                MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                if (methods.Length > 0)
+                {
+                    Console.WriteLine("  Методы:");
+                    foreach (var method in methods)
+                    {
+                        Console.WriteLine($"    - {method.Name}");
+                        Console.WriteLine($"      Возвращаемый тип: {method.ReturnType.Name}");
+
+                        // Атрибуты метода
+                        object[] methodAttrs = method.GetCustomAttributes(false);
+                        if (methodAttrs.Length > 0)
+                        {
+                            Console.WriteLine("      Атрибуты:");
+                            foreach (var attr in methodAttrs)
+                            {
+                                Console.WriteLine($"        - {attr.GetType().Name}");
+                                var properties = attr.GetType().GetProperties();
+                                foreach (var prop in properties)
+                                {
+                                    var value = prop.GetValue(attr);
+                                    Console.WriteLine($"          {prop.Name}: {value}");
+                                }
+                            }
+                        }
+
+                        ParameterInfo[] parameters = method.GetParameters();
+                        if (parameters.Length > 0)
+                        {
+                            Console.WriteLine("      Параметры:");
+                            foreach (var param in parameters)
+                            {
+                                Console.WriteLine($"        {param.ParameterType.Name} {param.Name}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("      Параметры: ОТСУТСТВУЮТ");
+                        }
                     }
                 }
             }
         }
     }
-
-    static string GetAccessModifier(MethodBase methodBase)
-    {
-        if (methodBase.IsPublic)
-            return "public";
-        if (methodBase.IsPrivate)
-            return "private";
-        if (methodBase.IsFamily)
-            return "protected";
-        if (methodBase.IsAssembly)
-            return "internal";
-        if (methodBase.IsFamilyOrAssembly)
-            return "protected internal";
-        
-        return "unknown";
-    }
-
-    static string GetTypeName(Type type)
-    {
-        if (type == typeof(void))
-            return "void";
-        if (type == typeof(int))
-            return "int";
-        if (type == typeof(string))
-            return "string";
-        if (type == typeof(bool))
-            return "bool";
-        if (type == typeof(double))
-            return "double";
-        if (type == typeof(float))
-            return "float";
-        if (type == typeof(char))
-            return "char";
-        if (type == typeof(long))
-            return "long";
-        if (type == typeof(byte))
-            return "byte";
-        if (type == typeof(object))
-            return "object";
-
-        if (type.IsGenericType)
-        {
-            string genericTypeName = type.Name.Split('`')[0];
-            string genericArgs = string.Join(", ", type.GetGenericArguments().Select(t => GetTypeName(t)));
-            return $"{genericTypeName}<{genericArgs}>";
-        }
-
-        return type.Name;
-    }
 }
-
-static class TypeExtensions
-{
-    public static bool IsCompilerGenerated(this Type type)
-    {
-        return type.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false).Length > 0;
-    }
-}
-
