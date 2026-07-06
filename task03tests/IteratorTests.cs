@@ -1,9 +1,9 @@
-namespace task03tests;
+namespace IteratorTests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using task03;
+using CustomCollection;
 
 public class IteratorTests
 {
