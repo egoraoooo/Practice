@@ -1,4 +1,4 @@
-﻿﻿namespace task03;
+﻿﻿namespace CustomCollection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
