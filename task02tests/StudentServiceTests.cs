@@ -2,7 +2,7 @@ namespace task02tests;
 using System;
 using System.Collections.Generic;
 using Xunit;
-using task02;
+using StudentService;
 public class StudentServiceTests
 {
     private List<Student> _testStudents;
