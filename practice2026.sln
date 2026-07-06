@@ -25,8 +25,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task07", "task07\task07.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task07tests", "task07tests\task07tests.csproj", "{94A61D87-5023-4755-AA3F-DCF01064FE65}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "task08", "task08", "{3BE8C832-2E92-4B6C-999D-22BBCC281ACE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task08tests", "task08tests\task08tests.csproj", "{F35CC1EC-A8DB-4209-9613-9A25BCF6BFC3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task08", "task08\task08.csproj", "{25F76461-E30F-441E-968E-BD174EE29421}"
