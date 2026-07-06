@@ -1,9 +1,9 @@
-namespace task05tests;
+namespace ClassAnalyzerTests;
 using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using task05;
+using ClassAnalyzer;
 
 public class TestClass
 {
