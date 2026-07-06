@@ -1,4 +1,4 @@
-﻿namespace task05;
+﻿namespace ClassAnalyzer;
 using System.Reflection;
 using System;
 using System.Collections.Generic;
