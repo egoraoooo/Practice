@@ -1,4 +1,4 @@
-namespace task08tests;
+namespace FileSystemCommandsTests;
 using System;
 using System.IO;
 using Xunit;
