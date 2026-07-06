@@ -1,8 +1,8 @@
-namespace StudentServiceTests;
+namespace task02tests;
 using System;
 using System.Collections.Generic;
 using Xunit;
-using StudentService;
+using task02;
 public class StudentServiceTests
 {
     private List<Student> _testStudents;
