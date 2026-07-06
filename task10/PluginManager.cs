@@ -1,0 +1,2 @@
+namespace PluginManager;
+using System;
