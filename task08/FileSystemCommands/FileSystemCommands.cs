@@ -3,6 +3,8 @@ using System;
 using System.IO;
 using CommandLib;
 
+[DisplayName("Команда подсчета размера директории")]
+[Version(1, 0)]
 public class DirectorySizeCommand : ICommand
 {
     private readonly string _directorypath;
@@ -11,6 +13,7 @@ public class DirectorySizeCommand : ICommand
         _directorypath = directorypath;
     }
 
+    [DisplayName("Выполнить команду")]
     public void Execute()
     {
         if (!Directory.Exists(_directorypath))
@@ -62,6 +65,8 @@ public class DirectorySizeCommand : ICommand
     }
 }
 
+[DisplayName("Команда поиска файлов")]
+[Version(1, 0)]
 public class FindFilesCommand : ICommand
 {
     private readonly string _directorypath;
@@ -73,6 +78,7 @@ public class FindFilesCommand : ICommand
         _searchpattern = searchpattern;
     }
 
+    [DisplayName("Выполнить команду")]
     public void Execute()
     {
         if (!Directory.Exists(_directorypath))
