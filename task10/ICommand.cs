@@ -1,4 +1,4 @@
-﻿namespace ICommand;
+﻿namespace PluginSystem;
 using System;
 
 public interface ICommand
