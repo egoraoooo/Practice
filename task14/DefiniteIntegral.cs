@@ -1,39 +1,27 @@
 ﻿namespace DefiniteIntegral;
 using System;
+using System.Threading;
 
-//
-// Вычисление определённого интеграла
-//
 public class DefiniteIntegral
 {
-    //
-    // a, b - границы отрезка, на котором происходит вычисление опредленного интеграла
-    // function - функция, для которой вычисляется определнный интеграл
-    // step - размер одного шага разбиения
-    // threadsNumber - число потоков, которые используются для вычислений
-    //
+    // Многопоточная версия из прошлой задачи (исходная)
+    // a, b — границы отрезка
+    // function — функция для интегрирования
+    // step — размер одного шага разбиения
+    // threadsNumber — число потоков
     public static double Solve(double a, double b, Func<double, double> function, double step, int threadsNumber)
     {
-        // Общий результат, к которому потоки будут добавлять свои частичные суммы
         double totalResult = 0.0;
-
-        // Количество шагов на весь отрезок
         int totalSteps = (int)Math.Ceiling((b - a) / step);
-
-        // Количество шагов на один поток (примерно)
         int stepsPerThread = totalSteps / threadsNumber;
 
-        // Если шагов слишком мало, используем один поток
         if (stepsPerThread < 1)
         {
             stepsPerThread = totalSteps;
             threadsNumber = 1;
         }
 
-        // Барьер для синхронизации потоков
         var barrier = new Barrier(threadsNumber);
-
-        // Массив потоков
         var threads = new Thread[threadsNumber];
 
         for (int i = 0; i < threadsNumber; i++)
@@ -42,13 +30,11 @@ public class DefiniteIntegral
 
             threads[i] = new Thread(() =>
             {
-                // Определяем границы отрезка для данного потока
                 double threadA = a + threadIndex * stepsPerThread * step;
                 double threadB;
 
                 if (threadIndex == threadsNumber - 1)
                 {
-                    // Последний поток обрабатывает оставшуюся часть до конца
                     threadB = b;
                 }
                 else
@@ -56,10 +42,8 @@ public class DefiniteIntegral
                     threadB = threadA + stepsPerThread * step;
                 }
 
-                // Вычисляем интеграл на отрезке методом трапеций
                 double localResult = CalculateTrapezoidIntegral(threadA, threadB, function, step);
 
-                // Используем Interlocked.CompareExchange для потокобезопасного сложения double
                 double currentTotal;
                 double newTotal;
                 do
@@ -67,27 +51,87 @@ public class DefiniteIntegral
                     currentTotal = totalResult;
                     newTotal = currentTotal + localResult;
                 } while (Interlocked.CompareExchange(
-                    ref totalResult, 
-                    newTotal, 
+                    ref totalResult,
+                    newTotal,
                     currentTotal) != currentTotal);
 
-                // Сигнализируем о достижении барьера
                 barrier.SignalAndWait();
             });
 
             threads[i].Start();
         }
 
-        // Основной поток дожидается завершения всех вычислительных потоков
         foreach (var thread in threads)
         {
             thread.Join();
         }
 
-        // Освобождаем ресурсы барьера
         barrier.Dispose();
 
         return totalResult;
+    }
+
+    // Оптимизированная многопоточная версия.
+    // Использует локальные суммы в массиве вместо Interlocked.CompareExchange,
+    // убирает Barrier — только Thread.Join в конце.
+    public static double SolveOptimized(double a, double b, Func<double, double> function, double step, int threadsNumber)
+    {
+        if (threadsNumber <= 1)
+            return SolveSequential(a, b, function, step);
+
+        int totalSteps = (int)Math.Ceiling((b - a) / step);
+        int stepsPerThread = totalSteps / threadsNumber;
+
+        if (stepsPerThread < 1)
+        {
+            stepsPerThread = totalSteps;
+            threadsNumber = 1;
+        }
+
+        double[] partialSums = new double[threadsNumber];
+        var threads = new Thread[threadsNumber];
+
+        for (int i = 0; i < threadsNumber; i++)
+        {
+            int threadIndex = i;
+
+            threads[i] = new Thread(() =>
+            {
+                double threadA = a + threadIndex * stepsPerThread * step;
+                double threadB;
+
+                if (threadIndex == threadsNumber - 1)
+                {
+                    threadB = b;
+                }
+                else
+                {
+                    threadB = threadA + stepsPerThread * step;
+                }
+
+                partialSums[threadIndex] = CalculateTrapezoidIntegral(threadA, threadB, function, step);
+            });
+
+            threads[i].Start();
+        }
+
+        foreach (var thread in threads)
+        {
+            thread.Join();
+        }
+
+        double totalResult = 0.0;
+        for (int i = 0; i < threadsNumber; i++)
+            totalResult += partialSums[i];
+
+        return totalResult;
+    }
+
+    // Однопоточная версия.
+    // Не использует Thread, Task, Barrier, Interlocked — только чистый цикл.
+    public static double SolveSequential(double a, double b, Func<double, double> function, double step)
+    {
+        return CalculateTrapezoidIntegral(a, b, function, step);
     }
 
     // Вычисляет определенный интеграл методом трапеций на заданном отрезке.
