@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "dZGYsp6DLApfiG7Ct88khnSOWCMGuDK+WY7dcL9jdwktxmUlBC6+Nuv7wx6E1rzrjxPdR2XBw0+zkwLyFwuMLg==",
+  "dgSpecHash": "UFjjN1v75bU=",
   "success": true,
   "projectFilePath": "/home/egrot/Documents/GitHub/Practice/task02/task02.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/egrot/.nuget/packages/microsoft.netcore.app.ref/8.0.28/microsoft.netcore.app.ref.8.0.28.nupkg.sha512",
+    "/home/egrot/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.28/microsoft.aspnetcore.app.ref.8.0.28.nupkg.sha512"
+  ],
   "logs": []
 }
