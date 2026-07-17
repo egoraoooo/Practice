@@ -192,5 +192,89 @@ namespace Task17Tests
             Assert.Single(exceptions);
             Assert.Equal(2, goodCmd.Count);
         }
+
+        // ========== Тесты задания 19 ==========
+
+        [Fact]
+        public void TestCommand_ExecutesMultipleTimes()
+        {
+            var scheduler = new RoundRobinScheduler();
+            var server = new ServerThread(scheduler);
+            var testCmd = new TestCommand(1);
+            var adapter = new StepCommandAdapter(testCmd, 3);
+            server.AddCommand(adapter);
+            server.AddCommand(new SoftStop(server));
+            server.Start();
+            server.Thread.Join();
+            Assert.True(adapter.IsComplete);
+            Assert.Equal(3, adapter.ExecutedCount);
+        }
+
+        [Fact]
+        public void FiveTestCommands_ExecuteThreeTimesEach()
+        {
+            var scheduler = new RoundRobinScheduler();
+            var server = new ServerThread(scheduler);
+            var adapters = new List<StepCommandAdapter>();
+
+            for (int i = 1; i <= 5; i++)
+            {
+                var testCmd = new TestCommand(i);
+                var adapter = new StepCommandAdapter(testCmd, 3);
+                adapters.Add(adapter);
+                server.AddCommand(adapter);
+            }
+
+            server.AddCommand(new SoftStop(server));
+            server.Start();
+            server.Thread.Join();
+
+            foreach (var adapter in adapters)
+            {
+                Assert.True(adapter.IsComplete);
+                Assert.Equal(3, adapter.ExecutedCount);
+            }
+        }
+
+        [Fact]
+        public void TestCommand_RoundRobinInterleaving()
+        {
+            var scheduler = new RoundRobinScheduler();
+            var server = new ServerThread(scheduler);
+            var adapters = new List<StepCommandAdapter>();
+
+            for (int i = 1; i <= 5; i++)
+            {
+                var testCmd = new TestCommand(i);
+                var adapter = new StepCommandAdapter(testCmd, 3);
+                adapters.Add(adapter);
+                server.AddCommand(adapter);
+            }
+
+            server.AddCommand(new SoftStop(server));
+            server.Start();
+            server.Thread.Join();
+
+            // Проверяем, что все адаптеры выполнились полностью
+            foreach (var adapter in adapters)
+            {
+                Assert.True(adapter.IsComplete);
+            }
+        }
+
+        [Fact]
+        public void HardStop_InterruptsTestCommands()
+        {
+            var scheduler = new RoundRobinScheduler();
+            var server = new ServerThread(scheduler);
+            var testCmd = new TestCommand(1);
+            var adapter = new StepCommandAdapter(testCmd, 1000);
+            server.AddCommand(adapter);
+            server.AddCommand(new HardStop(server));
+            server.Start();
+            var stopped = server.Thread.Join(500);
+            Assert.True(stopped);
+            Assert.False(adapter.IsComplete);
+        }
     }
 }
