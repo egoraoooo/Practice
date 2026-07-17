@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "oO2gVCAjjg0JEyEmuw+tqNoqXpNjbi3Zc/X+jWq0n8SWjltCNaqo9Pu670aeQ6F3FzflPJMc8oXYgCuxisyixw==",
+  "dgSpecHash": "3TkLRa+q8to=",
   "success": true,
   "projectFilePath": "/home/egrot/Documents/GitHub/Practice/task02tests/task02tests.csproj",
   "expectedPackageFiles": [
@@ -92,7 +92,9 @@
     "/home/egrot/.nuget/packages/xunit.core/2.4.2/xunit.core.2.4.2.nupkg.sha512",
     "/home/egrot/.nuget/packages/xunit.extensibility.core/2.4.2/xunit.extensibility.core.2.4.2.nupkg.sha512",
     "/home/egrot/.nuget/packages/xunit.extensibility.execution/2.4.2/xunit.extensibility.execution.2.4.2.nupkg.sha512",
-    "/home/egrot/.nuget/packages/xunit.runner.visualstudio/2.4.5/xunit.runner.visualstudio.2.4.5.nupkg.sha512"
+    "/home/egrot/.nuget/packages/xunit.runner.visualstudio/2.4.5/xunit.runner.visualstudio.2.4.5.nupkg.sha512",
+    "/home/egrot/.nuget/packages/microsoft.netcore.app.ref/8.0.28/microsoft.netcore.app.ref.8.0.28.nupkg.sha512",
+    "/home/egrot/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.28/microsoft.aspnetcore.app.ref.8.0.28.nupkg.sha512"
   ],
   "logs": []
 }
